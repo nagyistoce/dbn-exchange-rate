@@ -139,53 +139,49 @@ class DBN(object):
         self.errors = self.logLayer.errors(self.y)
         
     
-    def pretraining_functions(self, train_set_x, index k):
-    '''Generates a list of functions, for performing one step of
-    gradient descent at a given layer. The function will require
-    as input the minibatch index, and to train an RBM you just
-    need to iterate, calling the corresponding function on all
-    minibatch indexes.
-
-    :type train_set_x: theano.tensor.TensorType
-    :param train_set_x: Shared var. that contains all datapoints used
-                        for training the RBM
-    :type batch_size: int
-    :param batch_size: size of a [mini]batch
-    :param k: number of Gibbs steps to do in CD-k / PCD-k
-
-    '''
-
-    # index to a [mini]batch
-    index = T.lscalar('index')  # index to a minibatch
-    learning_rate = T.scalar('lr')  # learning rate to use
-
-    # number of batches
-    n_batches = train_set_x.get_value(borrow=True).shape[0] / 16
-    # begining of a batch, given `index`
-    batch_begin = index * batch_size
-    # ending of a batch given `index`
-    batch_end = batch_begin + batch_size
-
-    pretrain_fns = []
-    for rbm in self.rbm_layers:
-
-        # get the cost and the updates list
-        # using CD-k here (persisent=None) for training each RBM.
-        # TODO: change cost function to reconstruction error
-        cost, updates = rbm.get_cost_updates(learning_rate,
-                                             persistent=None, k=k)
-
-        # compile the theano function
-        fn = theano.function(inputs=[index,
-                        theano.Param(learning_rate, default=0.1)],
-                             outputs=cost,
-                             updates=updates,
-                             givens={self.x:
-                                train_set_x[batch_begin:batch_end]})
-        # append `fn` to the list of functions
-        pretrain_fns.append(fn)
-
-    return pretrain_fns
+    def pretraining_functions(self, train_set_x, i, k):
+        '''Generates a list of functions, for performing one step of
+        gradient descent at a given layer. The function will require
+        as input the minibatch index, and to train an RBM you just
+        need to iterate, calling the corresponding function on all
+        minibatch indexes.
+    
+        :type train_set_x: theano.tensor.TensorType
+        :param train_set_x: Shared var. that contains all datapoints used
+                            for training the RBM
+        :type batch_size: int
+        :param batch_size: size of a [mini]batch
+        :param k: number of Gibbs steps to do in CD-k / PCD-k
+    
+        '''
+    
+        # index to a [mini]batch
+        index = T.lscalar('index')  # index to a minibatch
+        learning_rate = T.scalar('lr')  # learning rate to use
+    
+        # number of batches
+        n_batches = train_set_x.get_value(borrow=True).shape[0] / 16
+    
+        pretrain_fns = []
+        for rbm in self.rbm_layers:
+    
+            # get the cost and the updates list
+            # using CD-k here (persisent=None) for training each RBM.
+            # TODO: change cost function to reconstruction error
+            cost, updates = rbm.get_cost_updates(learning_rate,
+                                                 persistent=None, k=k)
+    
+            # compile the theano function
+            fn = theano.function(inputs=[index,
+                            theano.Param(learning_rate, default=0.1)],
+                                 outputs=cost,
+                                 updates=updates,
+                                 givens={self.x:
+                                    train_set_x[:,i]})
+            # append `fn` to the list of functions
+            pretrain_fns.append(fn)
+    
+        return pretrain_fns
     
     
     

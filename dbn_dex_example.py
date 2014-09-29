@@ -139,7 +139,7 @@ class DBN(object):
         self.errors = self.logLayer.errors(self.y)
         
     
-    def pretraining_functions(self, train_set_x, i, k):
+    def pretraining_functions(self, train_set_x, batch_size, k):
         '''Generates a list of functions, for performing one step of
         gradient descent at a given layer. The function will require
         as input the minibatch index, and to train an RBM you just
@@ -177,21 +177,66 @@ class DBN(object):
                                  outputs=cost,
                                  updates=updates,
                                  givens={self.x:
-                                    train_set_x[:,i]})
+                                    train_set_x})
             # append `fn` to the list of functions
             pretrain_fns.append(fn)
     
         return pretrain_fns
     
     
+def test_DBN(finetune_lr=0.1, pretraining_epochs=100,
+             pretrain_lr=0.01, k=1, training_epochs=1000,
+             dataset='mnist.pkl.gz', batch_size=16):    
     
     
-numpy_rng = numpy.random.RandomState(123)
+    datasets = load_data(dataset)
 
-# construct the Deep Belief Network
-dbn = DBN(numpy_rng=numpy_rng, n_ins=16,
-      hidden_layers_sizes=[10, 10, 10],
-      n_outs=10)    
+    train_set_x, train_set_y = datasets[0]
+    valid_set_x, valid_set_y = datasets[1]
+    test_set_x, test_set_y = datasets[2]
+
+    # compute number of minibatches for training, validation and testing
+    n_train_batches = train_set_x.get_value(borrow=True).shape[0] / batch_size
+    
+    
+    numpy_rng = numpy.random.RandomState(123)
+    
+    # construct the Deep Belief Network
+    dbn = DBN(numpy_rng=numpy_rng, n_ins=16,
+          hidden_layers_sizes=[10, 10, 10],
+          n_outs=10)    
+        
+        #########################
+        # PRETRAINING THE MODEL #
+        #########################
+    print '... getting the pretraining functions'
+    pretraining_fns = dbn.pretraining_functions(train_set_x=train_set_x,
+                                                batch_size=16,
+                                                k=k)    
+    
+ 
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+if __name__ == '__main__':
+    test_DBN()

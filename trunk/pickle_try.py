@@ -92,8 +92,8 @@ test_set = test_set_x, test_set_y
 
 dataset = [train_set, val_set, test_set]
 
-f = gzip.open('dex.pkl.gz','wb')
-cPickle.dump(dataset, f, protocol=2)
+f = gzip.open('..\..\..\data\dex.pkl.gz','wb')
+cPickle.dump(dataset, f, protocol=-1)
 f.close()
 
 pprint(train_set_x.shape)

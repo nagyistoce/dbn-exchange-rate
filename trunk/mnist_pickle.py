@@ -13,7 +13,7 @@ import numpy as np
 import gzip, cPickle
 
 os.system("cls")
-dataset = 'mnist.pkl.gz'
+dataset = 'dex.pkl.gz'
 #dataset = 'dex.plk.gz'
 datasets = load_data(dataset)
 
@@ -21,3 +21,4 @@ train_set_x, train_set_y = datasets[0]
 valid_set_x, valid_set_y = datasets[1]
 test_set_x, test_set_y = datasets[2]
 
+print test_set_x

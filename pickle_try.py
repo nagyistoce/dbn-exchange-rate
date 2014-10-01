@@ -48,6 +48,8 @@ for line in f:
         Y.append(b[17])
 
 Len = len(X);
+
+
 X = np.asmatrix(X)
 Y = np.asarray(Y)
 

@@ -52,7 +52,8 @@ for a in range(0,2000):
     train_set_x[a] = X[a]
     train_set_y[a] = Y[a]
 
-train_set = ((train_set_x),(train_set_y))
+
+train_set = ((train_set_x.T),(train_set_y))
 type(train_set)
 cPickle.dump(train_set,data_file,-1)
 
@@ -65,6 +66,7 @@ for a in range(0,600):
     b = a + 2000
     valid_set_x[a] = X[b]
     valid_set_y[a] = Y[b]
+
     
 valid_set = ((valid_set_x),(valid_set_y))
 cPickle.dump(valid_set,data_file,-1)
@@ -79,7 +81,10 @@ for a in range(0,550):
     test_set_x[a] = X[b]
     test_set_y[a] = Y[b]
     
-test_set = ((test_set_x),(test_set_y))
+test_set = ((test_set_x.T),(test_set_y))
 cPickle.dump(test_set,data_file,-1)
 
 data_file.close()
+
+#print train_set_x.T.shape
+print "finished!"

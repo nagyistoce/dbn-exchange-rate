@@ -257,7 +257,7 @@ class DBN(object):
 
 def test_DBN(finetune_lr=0.1, pretraining_epochs=2,
              pretrain_lr=0.01, k=1, training_epochs=4,
-             dataset='dex.pkl.gz', batch_size=10):
+             dataset="C:\Python27\Lib\data\dex.pkl.gz", batch_size=10):
     """
     Demonstrates how to train and test a Deep Belief Network.
 
@@ -284,6 +284,8 @@ def test_DBN(finetune_lr=0.1, pretraining_epochs=2,
     train_set_x, train_set_y = datasets[0]
     valid_set_x, valid_set_y = datasets[1]
     test_set_x, test_set_y = datasets[2]
+
+    #print train_set_y
 
     # compute number of minibatches for training, validation and testing
     n_train_batches = train_set_x.get_value(borrow=True).shape[0] / batch_size

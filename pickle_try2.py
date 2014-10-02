@@ -44,47 +44,48 @@ for line in f:
 
 
 data_file = gzip.open('..\..\..\data\dex.pkl.gz','wb')
+#data_file = gzip.open('dex.pkl.gz','wb')
 
 train_set_x = np.ndarray((2000,16), dtype = 'float64')
-train_set_y = np.ndarray((2000,1), dtype = 'int32')
+#train_set_y = np.ndarray((2000,1), dtype = 'int64')
 
 for a in range(0,2000):
     train_set_x[a] = X[a]
-    train_set_y[a] = Y[a]
+    #train_set_y[a] = Y[a]
 
+train_set_y = np.array(Y[0:2000])
 
-train_set = ((train_set_x.T),(train_set_y))
-type(train_set)
-cPickle.dump(train_set,data_file,-1)
+train_set = ((train_set_x),(train_set_y))
 
 
 
 valid_set_x = np.ndarray((600,16), dtype = 'float64')
-valid_set_y = np.ndarray((600,1), dtype = 'int32')
+#valid_set_y = np.ndarray((600,1), dtype = 'int64')
 
 for a in range(0,600):
     b = a + 2000
     valid_set_x[a] = X[b]
-    valid_set_y[a] = Y[b]
-
+    #valid_set_y[a] = Y[b]
+valid_set_y = np.array(Y[2000:2600])
     
 valid_set = ((valid_set_x),(valid_set_y))
-cPickle.dump(valid_set,data_file,-1)
 
 
 
 test_set_x = np.ndarray((550,16), dtype = 'float64')
-test_set_y = np.ndarray((550,1), dtype = 'int32')
+#test_set_y = np.ndarray((550,1), dtype = 'int64')
 
 for a in range(0,550):
     b = a + 550
     test_set_x[a] = X[b]
-    test_set_y[a] = Y[b]
+    #test_set_y[a] = Y[b]
+test_set_y = np.array(Y[2600:3150])    
     
-test_set = ((test_set_x.T),(test_set_y))
-cPickle.dump(test_set,data_file,-1)
+test_set = ((test_set_x),(test_set_y))
 
+dataset = [train_set, valid_set, test_set]
+cPickle.dump(dataset,data_file,-1)
 data_file.close()
 
-#print train_set_x.T.shape
+
 print "finished!"

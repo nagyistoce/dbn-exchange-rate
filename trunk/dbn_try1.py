@@ -255,8 +255,8 @@ class DBN(object):
         return train_fn, valid_score, test_score
 
 
-def test_DBN(finetune_lr=0.1, pretraining_epochs=2,
-             pretrain_lr=0.01, k=1, training_epochs=4,
+def test_DBN(finetune_lr=0.1, pretraining_epochs=100,
+             pretrain_lr=0.01, k=1, training_epochs=1000,
              dataset="C:\Python27\Lib\data\dex.pkl.gz", batch_size=10):
     """
     Demonstrates how to train and test a Deep Belief Network.
@@ -295,7 +295,7 @@ def test_DBN(finetune_lr=0.1, pretraining_epochs=2,
     print '... building the model'
     # construct the Deep Belief Network
     dbn = DBN(numpy_rng=numpy_rng, n_ins=16,
-              hidden_layers_sizes=[10, 10, 10],
+              hidden_layers_sizes=[100, 100, 100, 100, 100, 100, 100, 100, 100, 100],
               n_outs=2)
 
     #########################

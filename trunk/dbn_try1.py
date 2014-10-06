@@ -295,7 +295,16 @@ def test_DBN(finetune_lr=0.1, pretraining_epochs=100,
     print '... building the model'
     # construct the Deep Belief Network
     dbn = DBN(numpy_rng=numpy_rng, n_ins=16,
-              hidden_layers_sizes=[100, 100, 100, 100, 100, 100, 100, 100, 100, 100],
+              hidden_layers_sizes=[100, 100, 100, 100, 100, 
+                                   100, 100, 100, 100, 100, 
+                                   100, 100, 100, 100, 100,
+                                   100, 100, 100, 100, 100, 
+                                   100, 100, 100, 100, 100, 
+                                   100, 100, 100, 100, 100, 
+                                   100, 100, 100, 100, 100,
+                                   100, 100, 100, 100, 100, 
+                                   100, 100, 100, 100, 100,
+                                   100, 100, 100, 100, 100],
               n_outs=2)
 
     #########################

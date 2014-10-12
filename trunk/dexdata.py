@@ -8,11 +8,11 @@ from datetime import datetime
 import time
 import os
 from pprint import pprint
+import csv
 
 os.system("cls")
 
-filename = "C:\JulyData\DEXCHUS.txt"
-
+filename = "C:\JulyData\Data\INTLFXD_csv_2\data\DEXJPUS.csv"
 def getData(filename):
     f = open(filename,"r")
     array = []
@@ -23,7 +23,7 @@ def getData(filename):
             readyFlag = True;
         if( goFlag == True):  
             line = line.strip('\n')   
-            b = line.split()
+            b = line.split(',')
             b[0] = int(time.mktime(time.strptime(b[0], "%Y-%m-%d")))
             if(b[1] != "."):
                 b[1] = float(b[1])
@@ -96,7 +96,27 @@ def getDataByDateRange(filename, start, end):
                 if(readyFlag == True):
                     goFlag = True
     return array
-    
-#pprint(getData(filename))    
+
+def getCsvData(filename):
+    f = open(filename,"r")
+    array = dict()
+    readyFlag = False;
+    goFlag = False;
+    for line in f:
+        if "DATE,VALUE" in line:
+            readyFlag = True;
+        if( goFlag == True):  
+            line = line.strip('\n')   
+            b = line.split(',')
+            b[0] = int(time.mktime(time.strptime(b[0], "%Y-%m-%d")))
+            if(b[1] != "."):
+                b[1] = float(b[1])
+                array[b[0]] = (b[1])
+        if(readyFlag == True):
+            goFlag = True
+    #pprint(array)
+    return array
+   
+pprint(getCsvData(filename))    
 #pprint(getDataAfterDate(filename, "2014-01-04"))
 #pprint(getDataByDateRange(filename, "2014-01-05", "2014-02-05"))

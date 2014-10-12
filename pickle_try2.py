@@ -12,7 +12,7 @@ from theano import function
 os.system("cls")
 
 filename = "completeData.txt"
-
+size =4
 
 f = open(filename,"r")
 X = []
@@ -38,15 +38,15 @@ for line in f:
         b[14] = float(b[14])
         b[15] = float(b[15])
         b[17] = int(b[17])
-
-        X.append(b[:16])
+        x_temp = (b[0], b[1], b[2], b[3])
+        X.append(x_temp)
         Y.append(b[17])
 
 
 data_file = gzip.open('..\..\..\data\dex.pkl.gz','wb')
 #data_file = gzip.open('dex.pkl.gz','wb')
 
-train_set_x = np.ndarray((2000,16), dtype = 'float64')
+train_set_x = np.ndarray((2000,size), dtype = 'float64')
 #train_set_y = np.ndarray((2000,1), dtype = 'int64')
 
 for a in range(0,2000):
@@ -59,7 +59,7 @@ train_set = ((train_set_x),(train_set_y))
 
 
 
-valid_set_x = np.ndarray((600,16), dtype = 'float64')
+valid_set_x = np.ndarray((600,size), dtype = 'float64')
 #valid_set_y = np.ndarray((600,1), dtype = 'int64')
 
 for a in range(0,600):
@@ -72,7 +72,7 @@ valid_set = ((valid_set_x),(valid_set_y))
 
 
 
-test_set_x = np.ndarray((550,16), dtype = 'float64')
+test_set_x = np.ndarray((550,size), dtype = 'float64')
 #test_set_y = np.ndarray((550,1), dtype = 'int64')
 
 for a in range(0,550):

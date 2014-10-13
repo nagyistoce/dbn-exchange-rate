@@ -117,6 +117,6 @@ def getCsvData(filename):
     #pprint(array)
     return array
    
-pprint(getCsvData(filename))    
+#pprint(getCsvData(filename))    
 #pprint(getDataAfterDate(filename, "2014-01-04"))
 #pprint(getDataByDateRange(filename, "2014-01-05", "2014-02-05"))

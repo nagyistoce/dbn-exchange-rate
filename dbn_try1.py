@@ -28,7 +28,7 @@ class DBN(object):
     regression layer on top.
     """
 
-    def __init__(self, numpy_rng, theano_rng=None, n_ins=4,
+    def __init__(self, numpy_rng, theano_rng=None, n_ins=6,
                  hidden_layers_sizes=[10, 10], n_outs=2):
         """This class is made to support a variable number of layers.
 
@@ -255,7 +255,7 @@ class DBN(object):
         return train_fn, valid_score, test_score
 
 
-def test_DBN(finetune_lr=0.001, pretraining_epochs=0,
+def test_DBN(finetune_lr=0.001, pretraining_epochs=100,
              pretrain_lr=0.01, k=1, training_epochs=1000,
              dataset="C:\Python27\Lib\data\dex.pkl.gz", batch_size=10):
     """
@@ -294,11 +294,11 @@ def test_DBN(finetune_lr=0.001, pretraining_epochs=0,
     numpy_rng = numpy.random.RandomState(123)
     print '... building the model'
     # construct the Deep Belief Network
-    lsize = 10
-    dbn = DBN(numpy_rng=numpy_rng, n_ins=4,
+    lsize = 12
+    dbn = DBN(numpy_rng=numpy_rng, n_ins=6,
               hidden_layers_sizes=[lsize, lsize, lsize, lsize, lsize,
-                                   lsize, lsize, lsize, lsize, lsize,
-                                   lsize, lsize, lsize, lsize, lsize,
+#                                   lsize, lsize, lsize, lsize, lsize,
+#                                   lsize, lsize, lsize, lsize, lsize,
                                    lsize, lsize, lsize, lsize, lsize],
               n_outs=2)
 
@@ -412,4 +412,5 @@ def test_DBN(finetune_lr=0.001, pretraining_epochs=0,
 
 
 if __name__ == '__main__':
+    os.system("cls")
     test_DBN()

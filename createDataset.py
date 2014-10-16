@@ -21,14 +21,39 @@ file1 = filepath + "DEXJPUS.csv"
 file2 = filepath + "DEXUSUK.csv"
 file3 = filepath + "DEXUSEU.csv"
 
-def createDataset():
-    JPUS = dex.getCsvData(file1)
-    USUK = dex.getCsvData(file2)
-    USEU = dex.getCsvData(file3)
+def runTests():
+    a = { 'b':1, 'c':2, 'e':4, 'a':1}
+    b = { 'b':2, 'd':3, 'e':1, 'a':1}
+    c = { 'b':3, 'c':1, 'j':1, 'e':2, 'a':1}
+    d = { 'b':2, 'd':3, 'k':1, 'a':1}
     
-    JPUS = normalizeSet(JPUS)
-    USUK = normalizeSet(USUK)
-    USEU = normalizeSet(USEU)
+    data = [a, b, c, d]
+    k = (a.keys())
+
+#    ck = getCommonKeys(k, b)
+#    print getCommonKeys(ck, c)
+    print getCommonKeys(data)
+
+# needs a list of dictionaries
+def getCommonKeys(data):
+    first_dic = data[0]
+    commonkeys = (first_dic.keys())
+    for dic in data:
+        keys = dic.keys()
+        new_list = []
+        for element in keys:
+            if element in commonkeys:
+                new_list.append(element)
+        commonkeys = new_list
+    return commonkeys
+        
+        
+        
+def createDataset():
+    JPUS = normalizeSet(dex.getCsvData(file1))
+    USUK = normalizeSet(dex.getCsvData(file2))
+    USEU = normalizeSet(dex.getCsvData(file3))
+
     
     common_table_keys = JPUS.viewkeys() & USUK.viewkeys() & USEU.viewkeys()
 #    print common_table_keys
@@ -153,8 +178,9 @@ def common_keys(a,b):
 
 
 if __name__ == '__main__':
-    createDataset()
-    arr = readDataset(savepath + "dex3Data.txt")
-#    pprint(arr)
-    buildDataset(arr)
-    createPklDataset(savepath + "dex3Data(built).txt")
+    runTests()
+    
+#    createDataset()
+#    arr = readDataset(savepath + "dex3Data.txt")
+#    buildDataset(arr)
+#    createPklDataset(savepath + "dex3Data(built).txt")

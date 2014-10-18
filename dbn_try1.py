@@ -28,7 +28,7 @@ class DBN(object):
     regression layer on top.
     """
 
-    def __init__(self, numpy_rng, theano_rng=None, n_ins=6,
+    def __init__(self, numpy_rng, theano_rng=None, n_ins=2*6,
                  hidden_layers_sizes=[10, 10], n_outs=2):
         """This class is made to support a variable number of layers.
 
@@ -294,9 +294,15 @@ def test_DBN(finetune_lr=0.001, pretraining_epochs=100,
     numpy_rng = numpy.random.RandomState(123)
     print '... building the model'
     # construct the Deep Belief Network
-    lsize = 6
-    dbn = DBN(numpy_rng=numpy_rng, n_ins=6,
+    lsize = 14
+    dbn = DBN(numpy_rng=numpy_rng, n_ins=8,
               hidden_layers_sizes=[lsize, lsize, lsize, lsize, lsize,
+                                   lsize, lsize, lsize, lsize, lsize,
+                                   lsize, lsize, lsize, lsize, lsize,
+                                   lsize, lsize, lsize, lsize, lsize,
+                                   lsize, lsize, lsize, lsize, lsize,
+                                   lsize, lsize, lsize, lsize, lsize,
+                                   lsize, lsize, lsize, lsize, lsize,
                                    lsize, lsize, lsize, lsize, lsize,
                                    lsize, lsize, lsize, lsize, lsize,
                                    lsize, lsize, lsize, lsize, lsize],

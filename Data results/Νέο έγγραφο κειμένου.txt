@@ -1,1 +1,0 @@
-[8 neurons][10 layers] Optimization complete with best validation score of 53.000000 %,with test performance 50.243902 %

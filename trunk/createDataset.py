@@ -110,14 +110,14 @@ def createPklDataset(filename, features):
             for a in range(size):
                 b[a] = float(b[a])
             b[size] = int(b[size]) 
-            x_temp = (b[0:8])
+            x_temp = (b[0:size])
             X.append(x_temp)
             Y.append(b[size])
     
     data_file = gzip.open('C:\Python27\Lib\data\dex.pkl.gz','wb')
     #data_file = gzip.open('dex.pkl.gz','wb')
     
-    set_size = 8
+    set_size = 12
 
     perc = [80, 10, 10]
     l_size = roundValue(len(X))

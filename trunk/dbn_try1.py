@@ -1,5 +1,3 @@
-"""
-"""
 import cPickle
 import gzip
 import os
@@ -7,7 +5,7 @@ import sys
 import time
 
 import numpy
-
+import DBN
 import theano
 import theano.tensor as T
 from theano.tensor.shared_randomstreams import RandomStreams
@@ -15,6 +13,7 @@ from theano.tensor.shared_randomstreams import RandomStreams
 from logistic_sgd import LogisticRegression, load_data
 from mlp import HiddenLayer
 from rbm import RBM
+
 
 
 class DBN(object):
@@ -278,7 +277,7 @@ def test_DBN(finetune_lr=0.001, pretraining_epochs=100,
     :type batch_size: int
     :param batch_size: the size of a minibatch
     """
-
+    all_time_start = time.clock()
     datasets = load_data(dataset)
 
     train_set_x, train_set_y = datasets[0]
@@ -294,18 +293,11 @@ def test_DBN(finetune_lr=0.001, pretraining_epochs=100,
     numpy_rng = numpy.random.RandomState(123)
     print '... building the model'
     # construct the Deep Belief Network
-    lsize = 14
-    dbn = DBN(numpy_rng=numpy_rng, n_ins=8,
-              hidden_layers_sizes=[lsize, lsize, lsize, lsize, lsize,
-                                   lsize, lsize, lsize, lsize, lsize,
-                                   lsize, lsize, lsize, lsize, lsize,
-                                   lsize, lsize, lsize, lsize, lsize,
-                                   lsize, lsize, lsize, lsize, lsize,
-                                   lsize, lsize, lsize, lsize, lsize,
-                                   lsize, lsize, lsize, lsize, lsize,
-                                   lsize, lsize, lsize, lsize, lsize,
-                                   lsize, lsize, lsize, lsize, lsize,
-                                   lsize, lsize, lsize, lsize, lsize],
+
+    H_L_table = createLayerTable(num_of_layers,lsize)
+    
+    dbn = DBN(numpy_rng=numpy_rng, n_ins=n_ins,
+              hidden_layers_sizes=H_L_table,
               n_outs=2)
 
     #########################
@@ -413,10 +405,50 @@ def test_DBN(finetune_lr=0.001, pretraining_epochs=100,
                           os.path.split(__file__)[1] +
                           ' ran for %.2fm' % ((end_time - start_time)
                                               / 60.))
+    all_time_end = time.clock()
+    all_time = all_time_end-all_time_start                                          
+    storeResults(n_ins, 
+                 num_of_layers, 
+                 lsize, 
+                 best_validation_loss, 
+                 test_score, 
+                 all_time)
 
 
-
+def storeResults(n_ins, layers, layer_size, valid_score, test_score, time):  
+#    f = open(filename, "ab")
+#    line =  "No. of features: "+str(n_ins)+", "
+#    line += "Layers: "+ str(layers)+ ", "
+#    line += "Neurons per layer:"+str(layer_size)+ ", "
+#    line += "Best validation score: "+ str(valid_score * 100.)+ " %%, "
+#    line += "Test score "+str(test_score * 100.)+ " %%"   
+#    f.write(line)
+#    f.close()
+    
+    f = open("C:\\Python27\\Lib\\site-packages\\xy\\Projects\\Data results\\Result_log.txt", "ab") 
+    line =  str(n_ins)+";"+str(layers)+";"
+    line += str(layer_size)+";"+str(valid_score*100)+";"
+    line += str(test_score*100)+";"+str(time)+"\n"
+    f.write(line)
+    f.close()
+    
+def createLayerTable(num, lsize):
+    l = list()
+    for a in range(num):
+        l.append(lsize)
+    return l
 
 if __name__ == '__main__':
     os.system("cls")
-    test_DBN()
+    n_ins = 12
+    lsize = 12
+    num_of_layers = 10
+    sample_layer_size = ( 8, 9, 10, 11, 12, 13, 14, 15, 16 )
+    sample_layers = (10, 20, 30 )
+    for a in sample_layers:
+        for b in sample_layer_size:
+            lsize = b
+            num_of_layers = a
+            print("Layers:",a,"Neurons:",b )
+            test_DBN()
+            os.system("cls")

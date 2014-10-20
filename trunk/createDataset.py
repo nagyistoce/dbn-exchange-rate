@@ -99,6 +99,7 @@ def buildDataset(array, features):
 def createPklDataset(filename, features):
 
     size = features * 2
+    set_size = 10
     
     f = open(filename,"r")
     X = []
@@ -110,14 +111,14 @@ def createPklDataset(filename, features):
             for a in range(size):
                 b[a] = float(b[a])
             b[size] = int(b[size]) 
-            x_temp = (b[0:size])
+            x_temp = (b[0:10])
             X.append(x_temp)
             Y.append(b[size])
     
     data_file = gzip.open('C:\Python27\Lib\data\dex.pkl.gz','wb')
     #data_file = gzip.open('dex.pkl.gz','wb')
     
-    set_size = 12
+    
 
     perc = [80, 10, 10]
     l_size = roundValue(len(X))
@@ -178,7 +179,7 @@ def createPklDataset(filename, features):
     dataset = [train_set, valid_set, test_set]
     cPickle.dump(dataset,data_file,-1)
     data_file.close()
-
+    print "Dataset creation complete"
     
     
 def normalizeSet(set):
@@ -217,6 +218,7 @@ if __name__ == '__main__':
 #    runTests()
     
     createDataset()
+    features = 6
     arr = readDataset(savepath + "dex3Data.txt", 6)
     buildDataset(arr, 6)
     createPklDataset(savepath + "dex3Data(built).txt", 6)

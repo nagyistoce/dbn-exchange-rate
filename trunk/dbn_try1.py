@@ -339,7 +339,7 @@ def test_DBN(finetune_lr=0.001, pretraining_epochs=100,
 
     print '... finetunning the model'
     # early-stopping parameters
-    patience = 200 * n_train_batches  # look as this many examples regardless
+    patience = 1 * n_train_batches  # look as this many examples regardless
     patience_increase = 2.    # wait this much longer when a new best is
                               # found
     improvement_threshold = 0.995  # a relative improvement of this much is
@@ -425,10 +425,10 @@ def storeResults(n_ins, layers, layer_size, valid_score, test_score, time):
 #    f.write(line)
 #    f.close()
     
-    f = open("C:\\Python27\\Lib\\site-packages\\xy\\Projects\\Data results\\Result_log.txt", "ab") 
+    f = open("C:\\Python27\\Lib\\site-packages\\xy\\Projects\\Data results\\Result_log.csv", "ab") 
     line =  str(n_ins)+";"+str(layers)+";"
-    line += str(layer_size)+";"+str(valid_score*100)+";"
-    line += str(test_score*100)+";"+str(time)+"\n"
+    line += str(layer_size)+";"+str((valid_score*100))+";"
+    line += str((test_score*100))+";"+str(time)+"\n"
     f.write(line)
     f.close()
     
@@ -440,11 +440,11 @@ def createLayerTable(num, lsize):
 
 if __name__ == '__main__':
     os.system("cls")
-    n_ins = 12
+    n_ins = 10
     lsize = 12
     num_of_layers = 10
-    sample_layer_size = ( 8, 9, 10, 11, 12, 13, 14, 15, 16 )
-    sample_layers = (10, 20, 30 )
+    sample_layer_size = (  10, 25, 50, 75, 100 )
+    sample_layers = (  3, 4, 5 )
     for a in sample_layers:
         for b in sample_layer_size:
             lsize = b

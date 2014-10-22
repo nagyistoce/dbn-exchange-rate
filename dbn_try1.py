@@ -9,7 +9,7 @@ import DBN
 import theano
 import theano.tensor as T
 from theano.tensor.shared_randomstreams import RandomStreams
-
+import createDataset as Dataset
 from logistic_sgd import LogisticRegression, load_data
 from mlp import HiddenLayer
 from rbm import RBM
@@ -254,8 +254,8 @@ class DBN(object):
         return train_fn, valid_score, test_score
 
 
-def test_DBN(finetune_lr=0.001, pretraining_epochs=100,
-             pretrain_lr=0.01, k=1, training_epochs=1000,
+def test_DBN(finetune_lr=0.001, pretraining_epochs=10,
+             pretrain_lr=0.01, k=1, training_epochs=10,
              dataset="C:\Python27\Lib\data\dex.pkl.gz", batch_size=10):
     """
     Demonstrates how to train and test a Deep Belief Network.
@@ -277,7 +277,6 @@ def test_DBN(finetune_lr=0.001, pretraining_epochs=100,
     :type batch_size: int
     :param batch_size: the size of a minibatch
     """
-    all_time_start = time.clock()
     datasets = load_data(dataset)
 
     train_set_x, train_set_y = datasets[0]
@@ -405,14 +404,11 @@ def test_DBN(finetune_lr=0.001, pretraining_epochs=100,
                           os.path.split(__file__)[1] +
                           ' ran for %.2fm' % ((end_time - start_time)
                                               / 60.))
-    all_time_end = time.clock()
-    all_time = all_time_end-all_time_start                                          
-    storeResults(n_ins, 
-                 num_of_layers, 
-                 lsize, 
-                 best_validation_loss, 
-                 test_score, 
-                 all_time)
+    global res_val
+    global res_test                                          
+    res_val = best_validation_loss
+    res_test = test_score 
+
 
 
 def storeResults(n_ins, layers, layer_size, valid_score, test_score, time):  
@@ -440,15 +436,38 @@ def createLayerTable(num, lsize):
 
 if __name__ == '__main__':
     os.system("cls")
+    savepath = "C:\\Python27\\Lib\\site-packages\\xy\\Projects\\Data\\"
+    crossval = 5
+    
+    sum_val = 0
+    sum_test = 0
+    res_val = 0
+    res_test = 0
+    
     n_ins = 10
     lsize = 12
     num_of_layers = 10
-    sample_layer_size = (  10, 25, 50, 75, 100 )
-    sample_layers = (  3, 4, 5 )
+    sample_layer_size = (  2, 4 )
+    sample_layers = (  2, 3 )
     for a in sample_layers:
         for b in sample_layer_size:
-            lsize = b
-            num_of_layers = a
-            print("Layers:",a,"Neurons:",b )
-            test_DBN()
-            os.system("cls")
+            all_time_start = time.clock()
+            for c in range(crossval):
+                Dataset.createPklDataset(savepath + "dex3Data(built).txt", 6)
+                lsize = b
+                num_of_layers = a
+                print("Layers:",a, "Neurons:",b, "Fold:",c )
+                test_DBN()
+                sum_val += res_val
+                sum_test += res_test
+                os.system("cls")
+            all_time_end = time.clock()
+            all_time = all_time_end-all_time_start                                          
+            storeResults(n_ins,
+                         num_of_layers, 
+                         lsize, 
+                         sum_val/crossval, 
+                         sum_test/crossval, 
+                         all_time)
+            sum_val = 0
+            sum_test = 0

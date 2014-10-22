@@ -116,7 +116,29 @@ def getCsvData(filename):
             goFlag = True
     #pprint(array)
     return array
-   
+    
+def getCsvData2(filename):
+    f = open(filename,"r")
+    array = dict()
+    temp = list()
+    readyFlag = False;
+    goFlag = False;
+    for line in f:
+        readyFlag = True;
+        if( goFlag == True):  
+            line = line.strip('\n')   
+            b = line.split(';')
+            b[0] = int(time.mktime(time.strptime(b[0], "%d/%m/%Y")))
+            for a in range(1,10):
+                if(b[a] != "."):
+                    b[a] = float(b[a])
+                    temp.append(b[a])
+            array[b[0]] = temp
+        if(readyFlag == True):
+            goFlag = True
+    #pprint(array)
+    return array   
 #pprint(getCsvData(filename))    
 #pprint(getDataAfterDate(filename, "2014-01-04"))
 #pprint(getDataByDateRange(filename, "2014-01-05", "2014-02-05"))
+pprint(getCsvData2("C:\\Python27\\Lib\\site-packages\\xy\\Projects\\Data\\final_data.csv"))

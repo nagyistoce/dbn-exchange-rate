@@ -14,6 +14,8 @@ import gzip, cPickle
 import theano.tensor as T
 from theano import function
 from pprint import pprint
+from random import shuffle
+
 
 filepath = "C:\\JulyData\\Data\\INTLFXD_csv_2\\data\\"
 savepath = "C:\\Python27\\Lib\\site-packages\\xy\\Projects\\Data\\"
@@ -118,7 +120,8 @@ def createPklDataset(filename, features):
     data_file = gzip.open('C:\Python27\Lib\data\dex.pkl.gz','wb')
     #data_file = gzip.open('dex.pkl.gz','wb')
     
-    
+    # shuffles the data for cross validation
+    shuffle(X)
 
     perc = [80, 10, 10]
     l_size = roundValue(len(X))

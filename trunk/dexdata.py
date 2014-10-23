@@ -137,8 +137,22 @@ def getCsvData2(filename):
         if(readyFlag == True):
             goFlag = True
     #pprint(array)
-    return array   
+    return array 
+
+def getTimeData(filename):
+    f = open(filename,"r")
+    array = list()
+    for line in f:
+        b = line.split('/')
+        
+        line = int(time.mktime(time.strptime(line, "%d/%m/%Y")))
+        array.append(line)
+    return array 
+    
+    
+    
+    
 #pprint(getCsvData(filename))    
 #pprint(getDataAfterDate(filename, "2014-01-04"))
 #pprint(getDataByDateRange(filename, "2014-01-05", "2014-02-05"))
-pprint(getCsvData2("C:\\Python27\\Lib\\site-packages\\xy\\Projects\\Data\\final_data.csv"))
+#pprint(getCsvData2("C:\\Python27\\Lib\\site-packages\\xy\\Projects\\Data\\final_data.csv"))

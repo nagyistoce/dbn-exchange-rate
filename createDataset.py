@@ -27,17 +27,25 @@ file5 = "C:\\JulyData\\Commodities\\LIBOR.csv"
 file6 = "C:\\JulyData\\Commodities\\OIL.csv"
 
 def runTests():
-    a = { 'b':1, 'c':2, 'e':4, 'a':1}
-    b = { 'b':2, 'd':3, 'e':1, 'a':1}
-    c = { 'b':3, 'c':1, 'j':1, 'e':2, 'a':1}
-    d = { 'b':2, 'd':3, 'k':1, 'a':1}
-    
-    data = [a, b, c, d]
-    k = (a.keys())
+#    a = { 'b':1, 'c':2, 'e':4, 'a':1}
+#    b = { 'b':2, 'd':3, 'e':1, 'a':1}
+#    c = { 'b':3, 'c':1, 'j':1, 'e':2, 'a':1}
+#    d = { 'b':2, 'd':3, 'k':1, 'a':1}
+#    
+#    data = [a, b, c, d]
+#    k = (a.keys())
+#
+##    ck = getCommonKeys(k, b)
+##    print getCommonKeys(ck, c)
+#    print getCommonKeys(data)
 
-#    ck = getCommonKeys(k, b)
-#    print getCommonKeys(ck, c)
-    print getCommonKeys(data)
+    fileTime = "C:\\Python27\\Lib\\site-packages\\xy\\Projects\\Data\\data_days.csv"
+    USEU = normalizeSet(dex.getCsvData(file3))
+    time = dex.getTimeData(fileTime)
+        
+        
+
+
 
         
 def createDataset():
@@ -218,10 +226,10 @@ def roundValue(num):
 if __name__ == '__main__':
     os.system("cls")
 
-#    runTests()
+    runTests()
     
-    createDataset()
-    features = 6
-    arr = readDataset(savepath + "dex3Data.txt", 6)
-    buildDataset(arr, 6)
-    createPklDataset(savepath + "dex3Data(built).txt", 6)
+#    createDataset()
+#    features = 6
+#    arr = readDataset(savepath + "dex3Data.txt", 6)
+#    buildDataset(arr, 6)
+#    createPklDataset(savepath + "dex3Data(built).txt", 6)

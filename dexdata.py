@@ -128,7 +128,7 @@ def getCsvData2(filename):
         if( goFlag == True):  
             line = line.strip('\n')   
             b = line.split(';')
-            b[0] = int(time.mktime(time.strptime(b[0], "%d/%m/%Y")))
+            b[0] = int(time.mktime(time.strptime(b[0], "%d-%m-%Y")))
             for a in range(1,10):
                 if(b[a] != "."):
                     b[a] = float(b[a])
@@ -143,8 +143,8 @@ def getTimeData(filename):
     f = open(filename,"r")
     array = list()
     for line in f:
-        b = line.split('/')
-        
+        line = line.strip('\n')   
+#        b = line.split('/')  
         line = int(time.mktime(time.strptime(line, "%d/%m/%Y")))
         array.append(line)
     return array 

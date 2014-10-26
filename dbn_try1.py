@@ -434,40 +434,59 @@ def createLayerTable(num, lsize):
         l.append(lsize)
     return l
 
+
+
+
 if __name__ == '__main__':
     os.system("cls")
     savepath = "C:\\Python27\\Lib\\site-packages\\xy\\Projects\\Data\\"
-    crossval = 5
-    
-    sum_val = 0
-    sum_test = 0
-    res_val = 0
-    res_test = 0
-    
-    n_ins = 10
-    lsize = 12
+#    crossval = 5
+#    
+#    sum_val = 0
+#    sum_test = 0
+#    res_val = 0
+#    res_test = 0
+#    
+#    n_ins = 10
+#    lsize = 12
+#    num_of_layers = 10
+#    sample_layer_size = (  2, 4 )
+#    sample_layers = (  2, 3 )
+#    for a in sample_layers:
+#        for b in sample_layer_size:
+#            all_time_start = time.clock()
+#            for c in range(crossval):
+#                Dataset.createPklDataset(savepath + "dex3Data(built).txt", 6)
+#                lsize = b
+#                num_of_layers = a
+#                print("Layers:",a, "Neurons:",b, "Fold:",c )
+#                test_DBN()
+#                sum_val += res_val
+#                sum_test += res_test
+#                os.system("cls")
+#            all_time_end = time.clock()
+#            all_time = all_time_end-all_time_start                                          
+#            storeResults(n_ins,
+#                         num_of_layers, 
+#                         lsize, 
+#                         sum_val/crossval, 
+#                         sum_test/crossval, 
+#                         all_time)
+#            sum_val = 0
+#            sum_test = 0
+
+### Run Simple Test
+
+    n_ins = 193
+    lsize = 20
     num_of_layers = 10
-    sample_layer_size = (  2, 4 )
-    sample_layers = (  2, 3 )
-    for a in sample_layers:
-        for b in sample_layer_size:
-            all_time_start = time.clock()
-            for c in range(crossval):
-                Dataset.createPklDataset(savepath + "dex3Data(built).txt", 6)
-                lsize = b
-                num_of_layers = a
-                print("Layers:",a, "Neurons:",b, "Fold:",c )
-                test_DBN()
-                sum_val += res_val
-                sum_test += res_test
-                os.system("cls")
-            all_time_end = time.clock()
-            all_time = all_time_end-all_time_start                                          
-            storeResults(n_ins,
-                         num_of_layers, 
-                         lsize, 
-                         sum_val/crossval, 
-                         sum_test/crossval, 
-                         all_time)
-            sum_val = 0
-            sum_test = 0
+    all_time_start = time.clock()
+    test_DBN()
+    all_time_end = time.clock()
+    all_time = all_time_end-all_time_start    
+    storeResults(n_ins,
+                 num_of_layers, 
+                 lsize, 
+                 res_val, 
+                 res_test, 
+                 all_time)

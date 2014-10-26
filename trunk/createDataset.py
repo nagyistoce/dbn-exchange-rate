@@ -25,6 +25,7 @@ file3 = filepath + "DEXUSEU.csv"
 file4 = "C:\\JulyData\\Commodities\\GOLD.csv"
 file5 = "C:\\JulyData\\Commodities\\LIBOR.csv"
 file6 = "C:\\JulyData\\Commodities\\OIL.csv"
+file7 = savepath + "plak_target.txt";
 
 def runTests():
 #    a = { 'b':1, 'c':2, 'e':4, 'a':1}
@@ -40,10 +41,49 @@ def runTests():
 #    print getCommonKeys(data)
 
     fileTime = "C:\\Python27\\Lib\\site-packages\\xy\\Projects\\Data\\data_days.csv"
-    USEU = normalizeSet(dex.getCsvData(file3))
-    time = dex.getTimeData(fileTime)
+    timestamp = dex.getTimeData(fileTime)
+
+    target = dict()
+    with open('C:\Python27\Lib\data\\target.pkl','rb') as f:
+        target = cPickle.load(f)
+
+    temp = list()
+    for i in timestamp:
+        if i in target:
+            temp.append(target[i])
+        else:
+            temp.append(-1) 
+    
+    f = open(file7,'w')
+    for i in temp:        
+        line = str(i)+"\n"
+        f.write(line)
+    f.close()    
+    
+def createTarget(filename):
+    
+    data = normalizeSet(dex.getCsvData(filename))
+
+    temp = []
+    list1 = []
+    for key, value in data.iteritems():
+        temp = [key,value]
+        list1.append(temp)
         
-        
+    length = len(list1)-1
+    
+    dictset = dict()
+    for i in range(length):
+        j = i + 1
+        if(list1[j][1] > list1[i][1] ):
+            dictset[list1[j][0]] = 1
+        else:
+            dictset[list1[j][0]] = 0
+    data_file = open('C:\Python27\Lib\data\\target.pkl','wb')
+    #data_file = gzip.open('dex.pkl.gz','wb')
+    dataset = dictset
+    cPickle.dump(dataset,data_file,-1)
+    data_file.close()     
 
 
 
@@ -108,8 +148,8 @@ def buildDataset(array, features):
 
 def createPklDataset(filename, features):
 
-    size = features * 2
-    set_size = 10
+    size = features
+    set_size = 193
     
     f = open(filename,"r")
     X = []
@@ -121,15 +161,14 @@ def createPklDataset(filename, features):
             for a in range(size):
                 b[a] = float(b[a])
             b[size] = int(b[size]) 
-            x_temp = (b[0:10])
+            x_temp = (b[0:size])
             X.append(x_temp)
             Y.append(b[size])
     
-    data_file = gzip.open('C:\Python27\Lib\data\dex.pkl.gz','wb')
-    #data_file = gzip.open('dex.pkl.gz','wb')
+
     
     # shuffles the data for cross validation
-    shuffle(X)
+#    shuffle(X)
 
     perc = [80, 10, 10]
     l_size = roundValue(len(X))
@@ -186,7 +225,8 @@ def createPklDataset(filename, features):
     
     
     
-    
+    data_file = gzip.open('C:\Python27\Lib\data\dex.pkl.gz','wb')
+    #data_file = gzip.open('dex.pkl.gz','wb')
     dataset = [train_set, valid_set, test_set]
     cPickle.dump(dataset,data_file,-1)
     data_file.close()
@@ -225,11 +265,11 @@ def roundValue(num):
 
 if __name__ == '__main__':
     os.system("cls")
-
-    runTests()
+#    createTarget(file3)
+#    runTests()
     
 #    createDataset()
 #    features = 6
 #    arr = readDataset(savepath + "dex3Data.txt", 6)
 #    buildDataset(arr, 6)
-#    createPklDataset(savepath + "dex3Data(built).txt", 6)
+    createPklDataset(savepath + "plak_data.csv", 193)

@@ -254,8 +254,8 @@ class DBN(object):
         return train_fn, valid_score, test_score
 
 
-def test_DBN(finetune_lr=0.001, pretraining_epochs=10,
-             pretrain_lr=0.01, k=1, training_epochs=10,
+def test_DBN(finetune_lr=0.01, pretraining_epochs=100,
+             pretrain_lr=0.01, k=1, training_epochs=1000,
              dataset="C:\Python27\Lib\data\dex.pkl.gz", batch_size=10):
     """
     Demonstrates how to train and test a Deep Belief Network.
@@ -338,7 +338,7 @@ def test_DBN(finetune_lr=0.001, pretraining_epochs=10,
 
     print '... finetunning the model'
     # early-stopping parameters
-    patience = 1 * n_train_batches  # look as this many examples regardless
+    patience = 100 * n_train_batches  # look as this many examples regardless
     patience_increase = 2.    # wait this much longer when a new best is
                               # found
     improvement_threshold = 0.995  # a relative improvement of this much is
@@ -478,8 +478,8 @@ if __name__ == '__main__':
 ### Run Simple Test
 
     n_ins = 193
-    lsize = 20
-    num_of_layers = 10
+    lsize = 200
+    num_of_layers = 20
     all_time_start = time.clock()
     test_DBN()
     all_time_end = time.clock()

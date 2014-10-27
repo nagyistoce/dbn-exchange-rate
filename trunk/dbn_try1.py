@@ -3,7 +3,7 @@ import gzip
 import os
 import sys
 import time
-
+import locale
 import numpy
 import DBN
 import theano
@@ -13,7 +13,6 @@ import createDataset as Dataset
 from logistic_sgd import LogisticRegression, load_data
 from mlp import HiddenLayer
 from rbm import RBM
-
 
 
 class DBN(object):
@@ -27,7 +26,7 @@ class DBN(object):
     regression layer on top.
     """
 
-    def __init__(self, numpy_rng, theano_rng=None, n_ins=2*6,
+    def __init__(self, numpy_rng, theano_rng=None, n_ins=2 * 6,
                  hidden_layers_sizes=[10, 10], n_outs=2):
         """This class is made to support a variable number of layers.
 
@@ -63,7 +62,7 @@ class DBN(object):
         # allocate symbolic variables for the data
         self.x = T.matrix('x')  # the data is presented as rasterized images
         self.y = T.ivector('y')  # the labels are presented as 1D vector
-                                 # of [int] labels
+        # of [int] labels
 
         # The DBN is an MLP, for which all weights of intermediate
         # layers are shared with a different RBM.  We will first
@@ -165,7 +164,6 @@ class DBN(object):
 
         pretrain_fns = []
         for rbm in self.rbm_layers:
-
             # get the cost and the updates list
             # using CD-k here (persisent=None) for training each RBM.
             # TODO: change cost function to reconstruction error
@@ -174,11 +172,11 @@ class DBN(object):
 
             # compile the theano function
             fn = theano.function(inputs=[index,
-                            theano.Param(learning_rate, default=0.1)],
+                                         theano.Param(learning_rate, default=0.1)],
                                  outputs=cost,
                                  updates=updates,
                                  givens={self.x:
-                                    train_set_x[batch_begin:batch_end]})
+                                             train_set_x[batch_begin:batch_end]})
             # append `fn` to the list of functions
             pretrain_fns.append(fn)
 
@@ -224,24 +222,24 @@ class DBN(object):
             updates.append((param, param - gparam * learning_rate))
 
         train_fn = theano.function(inputs=[index],
-              outputs=self.finetune_cost,
-              updates=updates,
-              givens={self.x: train_set_x[index * batch_size:
-                                          (index + 1) * batch_size],
-                      self.y: train_set_y[index * batch_size:
-                                          (index + 1) * batch_size]})
+                                   outputs=self.finetune_cost,
+                                   updates=updates,
+                                   givens={self.x: train_set_x[index * batch_size:
+                                   (index + 1) * batch_size],
+                                           self.y: train_set_y[index * batch_size:
+                                           (index + 1) * batch_size]})
 
         test_score_i = theano.function([index], self.errors,
-                 givens={self.x: test_set_x[index * batch_size:
-                                            (index + 1) * batch_size],
-                         self.y: test_set_y[index * batch_size:
-                                            (index + 1) * batch_size]})
+                                       givens={self.x: test_set_x[index * batch_size:
+                                       (index + 1) * batch_size],
+                                               self.y: test_set_y[index * batch_size:
+                                               (index + 1) * batch_size]})
 
         valid_score_i = theano.function([index], self.errors,
-              givens={self.x: valid_set_x[index * batch_size:
-                                          (index + 1) * batch_size],
-                      self.y: valid_set_y[index * batch_size:
-                                          (index + 1) * batch_size]})
+                                        givens={self.x: valid_set_x[index * batch_size:
+                                        (index + 1) * batch_size],
+                                                self.y: valid_set_y[index * batch_size:
+                                                (index + 1) * batch_size]})
 
         # Create a function that scans the entire validation set
         def valid_score():
@@ -283,7 +281,7 @@ def test_DBN(finetune_lr=0.01, pretraining_epochs=100,
     valid_set_x, valid_set_y = datasets[1]
     test_set_x, test_set_y = datasets[2]
 
-    #print train_set_y
+    # print train_set_y
 
     # compute number of minibatches for training, validation and testing
     n_train_batches = train_set_x.get_value(borrow=True).shape[0] / batch_size
@@ -294,14 +292,14 @@ def test_DBN(finetune_lr=0.01, pretraining_epochs=100,
     # construct the Deep Belief Network
 
     H_L_table = createLayerTable(num_of_layers, lsize)
-    
+
     dbn = DBN(numpy_rng=numpy_rng, n_ins=n_ins,
               hidden_layers_sizes=H_L_table,
               n_outs=2)
 
-    #########################
+    # ########################
     # PRETRAINING THE MODEL #
-    #########################
+    # ########################
     print '... getting the pretraining functions'
     pretraining_fns = dbn.pretraining_functions(train_set_x=train_set_x,
                                                 batch_size=batch_size,
@@ -333,21 +331,21 @@ def test_DBN(finetune_lr=0.01, pretraining_epochs=100,
     # get the training, validation and testing function for the model
     print '... getting the finetuning functions'
     train_fn, validate_model, test_model = dbn.build_finetune_functions(
-                datasets=datasets, batch_size=batch_size,
-                learning_rate=finetune_lr)
+        datasets=datasets, batch_size=batch_size,
+        learning_rate=finetune_lr)
 
     print '... finetunning the model'
     # early-stopping parameters
     patience = 100 * n_train_batches  # look as this many examples regardless
-    patience_increase = 2.    # wait this much longer when a new best is
-                              # found
+    patience_increase = 2.  # wait this much longer when a new best is
+    # found
     improvement_threshold = 0.995  # a relative improvement of this much is
-                                   # considered significant
+    # considered significant
     validation_frequency = min(n_train_batches, patience / 2)
-                                  # go through this many
-                                  # minibatche before checking the network
-                                  # on the validation set; in this case we
-                                  # check every epoch
+    # go through this many
+    # minibatche before checking the network
+    # on the validation set; in this case we
+    # check every epoch
 
     best_params = None
     best_validation_loss = numpy.inf
@@ -399,85 +397,158 @@ def test_DBN(finetune_lr=0.01, pretraining_epochs=100,
     end_time = time.clock()
     print(('Optimization complete with best validation score of %f %%,'
            'with test performance %f %%') %
-                 (best_validation_loss * 100., test_score * 100.))
+          (best_validation_loss * 100., test_score * 100.))
     print >> sys.stderr, ('The fine tuning code for file ' +
                           os.path.split(__file__)[1] +
                           ' ran for %.2fm' % ((end_time - start_time)
                                               / 60.))
     global res_val
-    global res_test                                          
+    global res_test
     res_val = best_validation_loss
-    res_test = test_score 
+    res_test = test_score
 
 
+def storeResults(n_ins, layers, layer_size, finetune_lr, pretrain_lr, valid_score, test_score, timelapse, comment):
+    f = open("C:\\Python27\\Lib\\site-packages\\xy\\Projects\\Data results\\Result_log.csv", "ab")
 
-def storeResults(n_ins, layers, layer_size, valid_score, test_score, time):
-    f = open("C:\\Python27\\Lib\\site-packages\\xy\\Projects\\Data results\\Result_log.csv", "ab") 
-    line =  str(n_ins)+";"+str(layers)+";"
-    line += str(layer_size)+";"+str((valid_score*100))+";"
-    line += str((test_score*100))+";"+str(time)+"\n"
+    finetune_lr = locale.format('%f', finetune_lr)
+    pretrain_lr = locale.format('%f', pretrain_lr)
+    valid_score = locale.format('%.6f', valid_score*100)
+    test_score = locale.format('%.6f', test_score*100)
+    timelapse = locale.format('%.2f', timelapse)
+
+    line = str(n_ins) + ";"
+    line += str(layers) + ";"
+    line += str(layer_size) + ";"
+    line += str(finetune_lr) + ";"
+    line += str(pretrain_lr) + ";"
+    line += str(valid_score) + ";"
+    line += str(test_score) + ";"
+    line += str(timelapse) + ";"
+    line += str(comment)
+    line += "\n"
     f.write(line)
     f.close()
-    
+
+
 def createLayerTable(num, lsize):
     l = list()
     for a in range(num):
         l.append(lsize)
     return l
 
+def singleTest():
+    n_ins = 193
+    lsize = 20
+    num_of_layers = 20
+    fine_lr = 0.01
+    pretr_lr = 0.001
+    all_time_start = time.clock()
+    test_DBN(finetune_lr=fine_lr, pretraining_epochs=100,
+             pretrain_lr=pretr_lr, k=1, training_epochs=1000,
+             dataset="C:\Python27\Lib\data\dex.pkl.gz", batch_size=10)
+    all_time_end = time.clock()
+    all_time = all_time_end - all_time_start
+    storeResults(n_ins,
+                 num_of_layers,
+                 lsize,
+                 fine_lr,
+                 pretr_lr,
+                 res_val,
+                 res_test,
+                 all_time,
+                 "Rocket")
 
+def repetitiveTests():
+    n_ins = 193
+    fine_lr = 0.01
+    pretr_lr = 0.001
+    sample_layer_size = (2, 4)
+    sample_layers = (2, 3)
+    for a in sample_layers:
+        for b in sample_layer_size:
+            all_time_start = time.clock()
+            Dataset.createPklDataset(savepath + "dex3Data(built).txt", 6)
+            lsize = b
+            num_of_layers = a
+            print("Layers:", a, "Neurons:", b, "Fold:", c )
+            test_DBN(finetune_lr=fine_lr, pretrain_lr=pretr_lr)
+            os.system("cls")
+            all_time_end = time.clock()
+            all_time = all_time_end - all_time_start
+            storeResults(n_ins,
+                         num_of_layers,
+                         lsize,
+                         fine_lr,
+                         pretr_lr,
+                         res_val,
+                         res_test,
+                         all_time,
+                         "Rocket")
 
+def Rep_tests_crossval():
+
+    crossval = 5
+
+    sum_val = 0
+    sum_test = 0
+    res_val = 0
+    res_test = 0
+
+    n_ins = 193
+    sample_layer_size = (  2, 4 )
+    sample_layers = (  2, 3 )
+    for a in sample_layers:
+        for b in sample_layer_size:
+            all_time_start = time.clock()
+            for c in range(crossval):
+                Dataset.createPklDataset(savepath + "dex3Data(built).txt", 193)
+                lsize = b
+                num_of_layers = a
+                print("Layers:", a, "Neurons:", b, "Fold:", c )
+                test_DBN()
+                sum_val += res_val
+                sum_test += res_test
+                os.system("cls")
+            all_time_end = time.clock()
+            all_time = all_time_end - all_time_start
+            storeResults(n_ins,
+                         num_of_layers,
+                         lsize,
+                         fine_lr,
+                         pretr_lr,
+                         sum_val / crossval,
+                         sum_test / crossval,
+                         all_time,
+                         "Rocket")
+            sum_val = 0
+            sum_test = 0
 
 if __name__ == '__main__':
     os.system("cls")
-    savepath = "C:\\Python27\\Lib\\site-packages\\xy\\Projects\\Data\\"
-#    crossval = 5
-#    
-#    sum_val = 0
-#    sum_test = 0
-#    res_val = 0
-#    res_test = 0
-#    
-#    n_ins = 10
-#    lsize = 12
-#    num_of_layers = 10
-#    sample_layer_size = (  2, 4 )
-#    sample_layers = (  2, 3 )
-#    for a in sample_layers:
-#        for b in sample_layer_size:
-#            all_time_start = time.clock()
-#            for c in range(crossval):
-#                Dataset.createPklDataset(savepath + "dex3Data(built).txt", 6)
-#                lsize = b
-#                num_of_layers = a
-#                print("Layers:",a, "Neurons:",b, "Fold:",c )
-#                test_DBN()
-#                sum_val += res_val
-#                sum_test += res_test
-#                os.system("cls")
-#            all_time_end = time.clock()
-#            all_time = all_time_end-all_time_start                                          
-#            storeResults(n_ins,
-#                         num_of_layers, 
-#                         lsize, 
-#                         sum_val/crossval, 
-#                         sum_test/crossval, 
-#                         all_time)
-#            sum_val = 0
-#            sum_test = 0
-
-### Run Simple Test
+    locale.setlocale(locale.LC_ALL, 'greek')
+    #savepath = "C:\\Python27\\Lib\\site-packages\\xy\\Projects\\Data\\"
 
     n_ins = 193
-    lsize = 200
-    num_of_layers = 20
+    lsize = 20
+    num_of_layers = 2
+    fine_lr = 0.001
+    pretr_lr = 0.1
     all_time_start = time.clock()
-    test_DBN()
+    test_DBN(finetune_lr=fine_lr, pretraining_epochs=10,
+             pretrain_lr=pretr_lr, k=1, training_epochs=10,
+             dataset="C:\Python27\Lib\data\dex.pkl.gz", batch_size=10)
     all_time_end = time.clock()
-    all_time = all_time_end-all_time_start    
+    all_time = all_time_end - all_time_start
     storeResults(n_ins,
-                 num_of_layers, 
-                 lsize, 
-                 res_val, 
-                 res_test, 
-                 all_time)
+                 num_of_layers,
+                 lsize,
+                 fine_lr,
+                 pretr_lr,
+                 res_val,
+                 res_test,
+                 all_time,
+                 "Rocket")
+
+
+

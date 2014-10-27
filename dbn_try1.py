@@ -293,7 +293,7 @@ def test_DBN(finetune_lr=0.01, pretraining_epochs=100,
     print '... building the model'
     # construct the Deep Belief Network
 
-    H_L_table = createLayerTable(num_of_layers,lsize)
+    H_L_table = createLayerTable(num_of_layers, lsize)
     
     dbn = DBN(numpy_rng=numpy_rng, n_ins=n_ins,
               hidden_layers_sizes=H_L_table,
@@ -411,16 +411,7 @@ def test_DBN(finetune_lr=0.01, pretraining_epochs=100,
 
 
 
-def storeResults(n_ins, layers, layer_size, valid_score, test_score, time):  
-#    f = open(filename, "ab")
-#    line =  "No. of features: "+str(n_ins)+", "
-#    line += "Layers: "+ str(layers)+ ", "
-#    line += "Neurons per layer:"+str(layer_size)+ ", "
-#    line += "Best validation score: "+ str(valid_score * 100.)+ " %%, "
-#    line += "Test score "+str(test_score * 100.)+ " %%"   
-#    f.write(line)
-#    f.close()
-    
+def storeResults(n_ins, layers, layer_size, valid_score, test_score, time):
     f = open("C:\\Python27\\Lib\\site-packages\\xy\\Projects\\Data results\\Result_log.csv", "ab") 
     line =  str(n_ins)+";"+str(layers)+";"
     line += str(layer_size)+";"+str((valid_score*100))+";"

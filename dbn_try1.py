@@ -529,26 +529,54 @@ if __name__ == '__main__':
     locale.setlocale(locale.LC_ALL, 'greek')
     #savepath = "C:\\Python27\\Lib\\site-packages\\xy\\Projects\\Data\\"
 
+    # n_ins = 193
+    # lsize = 20
+    # num_of_layers = 2
+    # fine_lr = 0.001
+    # pretr_lr = 0.1
+    # all_time_start = time.clock()
+    # test_DBN(finetune_lr=fine_lr, pretraining_epochs=10,
+    #          pretrain_lr=pretr_lr, k=1, training_epochs=10,
+    #          dataset="C:\Python27\Lib\data\dex.pkl.gz", batch_size=10)
+    # all_time_end = time.clock()
+    # all_time = all_time_end - all_time_start
+    # storeResults(n_ins,
+    #              num_of_layers,
+    #              lsize,
+    #              fine_lr,
+    #              pretr_lr,
+    #              res_val,
+    #              res_test,
+    #              all_time,
+    #              "Rocket")
+
+
     n_ins = 193
+    fine_lr = 0.01
+    pretr_lr = 0.001
     lsize = 20
-    num_of_layers = 2
-    fine_lr = 0.001
-    pretr_lr = 0.1
-    all_time_start = time.clock()
-    test_DBN(finetune_lr=fine_lr, pretraining_epochs=10,
-             pretrain_lr=pretr_lr, k=1, training_epochs=10,
-             dataset="C:\Python27\Lib\data\dex.pkl.gz", batch_size=10)
-    all_time_end = time.clock()
-    all_time = all_time_end - all_time_start
-    storeResults(n_ins,
-                 num_of_layers,
-                 lsize,
-                 fine_lr,
-                 pretr_lr,
-                 res_val,
-                 res_test,
-                 all_time,
-                 "Rocket")
-
-
-
+    num_of_layers = 10
+    finetune_lr = (0.0001, 0.001, 0.01, 0.1, 0.5, 0.9)
+    pretrain_lr = (0.0001, 0.001, 0.01, 0.1, 0.5, 0.9)
+    for a in finetune_lr:
+        for b in pretrain_lr:
+            all_time_start = time.clock()
+            #Dataset.createPklDataset(savepath + "dex3Data(built).txt", 6)
+            fine_tr = a
+            pretr_lr = b
+            print("Finetuning:", a, "Pretraining:", b )
+            test_DBN(finetune_lr=fine_lr, pretraining_epochs=100,
+                     pretrain_lr=pretr_lr, k=1, training_epochs=100,
+                     dataset="C:\Python27\Lib\data\dex.pkl.gz", batch_size=10)
+            os.system("cls")
+            all_time_end = time.clock()
+            all_time = all_time_end - all_time_start
+            storeResults(n_ins,
+                         num_of_layers,
+                         lsize,
+                         fine_lr,
+                         pretr_lr,
+                         res_val,
+                         res_test,
+                         all_time,
+                         "Trying learning rate")

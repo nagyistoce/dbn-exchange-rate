@@ -292,6 +292,7 @@ def test_DBN(finetune_lr=0.01, pretraining_epochs=100,
     # construct the Deep Belief Network
 
     H_L_table = createLayerTable(num_of_layers, lsize)
+    H_L_table = createFunnelTable(num_of_layers, lsize)   
 
     dbn = DBN(numpy_rng=numpy_rng, n_ins=n_ins,
               hidden_layers_sizes=H_L_table,
@@ -436,6 +437,15 @@ def createLayerTable(num, lsize):
     for a in range(num):
         l.append(lsize)
     return l
+    
+def createFunnelTable(num, lsize):  
+    l = list()
+    token = num/lsize;
+    for a in range(num):
+        layer = lsize - (a*token)
+        layer = int(layer)
+        l.append(layer)
+    return l
 
 def singleTest():
     n_ins = 193
@@ -529,54 +539,54 @@ if __name__ == '__main__':
     locale.setlocale(locale.LC_ALL, 'greek')
     #savepath = "C:\\Python27\\Lib\\site-packages\\xy\\Projects\\Data\\"
 
-    # n_ins = 193
-    # lsize = 20
-    # num_of_layers = 2
-    # fine_lr = 0.001
-    # pretr_lr = 0.1
-    # all_time_start = time.clock()
-    # test_DBN(finetune_lr=fine_lr, pretraining_epochs=10,
-    #          pretrain_lr=pretr_lr, k=1, training_epochs=10,
-    #          dataset="C:\Python27\Lib\data\dex.pkl.gz", batch_size=10)
-    # all_time_end = time.clock()
-    # all_time = all_time_end - all_time_start
-    # storeResults(n_ins,
-    #              num_of_layers,
-    #              lsize,
-    #              fine_lr,
-    #              pretr_lr,
-    #              res_val,
-    #              res_test,
-    #              all_time,
-    #              "Rocket")
-
-
     n_ins = 193
-    fine_lr = 0.01
-    pretr_lr = 0.001
-    lsize = 20
+    lsize = 200
     num_of_layers = 10
-    finetune_lr = (0.0001, 0.001, 0.01, 0.1, 0.5, 0.9)
-    pretrain_lr = (0.0001, 0.001, 0.01, 0.1, 0.5, 0.9)
-    for a in finetune_lr:
-        for b in pretrain_lr:
-            all_time_start = time.clock()
-            #Dataset.createPklDataset(savepath + "dex3Data(built).txt", 6)
-            fine_tr = a
-            pretr_lr = b
-            print("Finetuning:", a, "Pretraining:", b )
-            test_DBN(finetune_lr=fine_lr, pretraining_epochs=100,
-                     pretrain_lr=pretr_lr, k=1, training_epochs=100,
-                     dataset="C:\Python27\Lib\data\dex.pkl.gz", batch_size=10)
-            os.system("cls")
-            all_time_end = time.clock()
-            all_time = all_time_end - all_time_start
-            storeResults(n_ins,
-                         num_of_layers,
-                         lsize,
-                         fine_lr,
-                         pretr_lr,
-                         res_val,
-                         res_test,
-                         all_time,
-                         "Trying learning rate")
+    fine_lr = 0.001
+    pretr_lr = 0.1
+    all_time_start = time.clock()
+    test_DBN(finetune_lr=fine_lr, pretraining_epochs=100,
+              pretrain_lr=pretr_lr, k=1, training_epochs=100,
+              dataset="C:\Python27\Lib\data\dex.pkl.gz", batch_size=10)
+    all_time_end = time.clock()
+    all_time = all_time_end - all_time_start
+    storeResults(n_ins,
+                  num_of_layers,
+                  lsize,
+                  fine_lr,
+                  pretr_lr,
+                  res_val,
+                  res_test,
+                  all_time,
+                  "Funnel table")
+
+
+#    n_ins = 193
+#    fine_lr = 0.01
+#    pretr_lr = 0.001
+#    lsize = 20
+#    num_of_layers = 10
+#    finetune_lr = (0.0001, 0.001, 0.01, 0.1, 0.5, 0.9)
+#    pretrain_lr = (0.0001, 0.001, 0.01, 0.1, 0.5, 0.9)
+#    for a in finetune_lr:
+#        for b in pretrain_lr:
+#            all_time_start = time.clock()
+#            #Dataset.createPklDataset(savepath + "dex3Data(built).txt", 6)
+#            fine_tr = a
+#            pretr_lr = b
+#            print("Finetuning:", a, "Pretraining:", b )
+#            test_DBN(finetune_lr=fine_lr, pretraining_epochs=100,
+#                     pretrain_lr=pretr_lr, k=1, training_epochs=100,
+#                     dataset="C:\Python27\Lib\data\dex.pkl.gz", batch_size=10)
+#            os.system("cls")
+#            all_time_end = time.clock()
+#            all_time = all_time_end - all_time_start
+#            storeResults(n_ins,
+#                         num_of_layers,
+#                         lsize,
+#                         fine_lr,
+#                         pretr_lr,
+#                         res_val,
+#                         res_test,
+#                         all_time,
+#                         "Trying learning rate")

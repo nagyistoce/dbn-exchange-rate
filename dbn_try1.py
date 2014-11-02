@@ -566,8 +566,8 @@ if __name__ == '__main__':
     pretr_lr = 0.001
     lsize = 20
     num_of_layers = 10
-    layer_size = (200, 300)
-    layers = (5, 10, 15, 20, 25, 30)
+    layer_size = (300, 1)
+    layers = (1, 2, 3, 4, 5, 10, 15, 20)
     for a in layer_size:
         for b in layers:
             all_time_start = time.clock()
